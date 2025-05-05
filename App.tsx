@@ -4,10 +4,11 @@ import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import TabNavigation from './src/navigation/TabNavigation';
 import StackNavigation from './src/navigation/StackNavigation';
 import { ActivityIndicator, View } from 'react-native';
+import AuthNavigation from './src/navigation/AuthNavigation';
 
 const App = () => {
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null); // ✅ Fix ở đây
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
 
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged(user => {
@@ -27,7 +28,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {user ? <TabNavigation /> : <StackNavigation />}
+      {user ? <TabNavigation /> : <AuthNavigation />}
     </NavigationContainer>
   );
 };

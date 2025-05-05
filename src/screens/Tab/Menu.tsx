@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const Menu = () => {
+const Menu = ({navigation}: any) => {
   return (
     <View>
-      <Text>Menu</Text>
+      <Button title="Menu" onPress={() => navigation.navigate('DrawerNavigation')} />
     </View>
   )
 }

@@ -10,7 +10,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import Icon from 'react-native-vector-icons/Ionicons'; // Hoặc dùng iconsax-react-native
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const LoginScreen = ({navigation}: any) => {
   const [errorMessage, setErrorMessage] = useState('');
@@ -30,7 +30,6 @@ const LoginScreen = ({navigation}: any) => {
 
     try {
       await auth().signInWithEmailAndPassword(values.email, values.password);
-      navigation.navigate('HomeScreen');
     } catch (error: any) {
       if (error && error.code) {
         switch (error.code) {

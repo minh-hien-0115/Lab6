@@ -1,6 +1,5 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen';
 import {Home, Message, Notification, Profile2User, Sms} from 'iconsax-react-native';
 import {LogoutCurve} from 'iconsax-react-native';
 import SignOut from '../screens/auth/SignOut';
@@ -55,13 +54,6 @@ const TabNavigation = () => {
           tabBarIcon: ({color}) => <HamburgerMenu color={color} size={20} />,
         }}
       />
-      {/* <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarIcon: ({color}) => <Home color={color} size={20} />,
-        }}
-      /> */}
       <Tab.Screen
         name="Profile"
         component={SignOut}
