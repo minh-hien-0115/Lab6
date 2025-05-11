@@ -1,9 +1,9 @@
-import { Menu, Video } from "iconsax-react-native";
-import BanBe from "./BanBe";
-import NhanTin from "./NhanTin";
-import ThongBao from "./ThongBao";
-import TrangChu from "./TrangChu";
+import AddScreen from "./AddScreen";
+import EditTaskScreen from "./EditTaskScreen";
+import HomeScreen from "./HomeScreen";
+import ListFinishScreen from "./ListFinishScreen";
+import ListUnfinishScreen from "./ListUnfinishScreen";
 
 export {
-    BanBe, Menu, NhanTin, ThongBao, TrangChu, Video
-}
+    HomeScreen, ListFinishScreen, ListUnfinishScreen, AddScreen, EditTaskScreen
+};

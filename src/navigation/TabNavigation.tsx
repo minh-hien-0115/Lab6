@@ -1,11 +1,8 @@
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Add, AddSquare, ArchiveSlash, ArchiveTick, Home, Profile2User, Setting2 } from 'iconsax-react-native';
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Home, Message, Notification, Profile2User, Sms} from 'iconsax-react-native';
-import {LogoutCurve} from 'iconsax-react-native';
-import SignOut from '../screens/auth/SignOut';
-import {BanBe, NhanTin, ThongBao, TrangChu, Video} from '../screens/Tab';
-import Menu from '../screens/Tab/Menu';
-import { HamburgerMenu } from 'iconsax-react-nativejs';
+import { AddScreen, EditTaskScreen, HomeScreen, ListFinishScreen, ListUnfinishScreen, } from '../screens/Tab';
+import { SettingScreen } from '../screens/settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -14,51 +11,44 @@ const TabNavigation = () => {
     <Tab.Navigator screenOptions={{headerShown: false}}>
       <Tab.Screen
         name="Trang Chủ"
-        component={TrangChu}
+        component={HomeScreen}
         options={{
           tabBarIcon: ({color}) => <Home color={color} size={20} />,
         }}
       />
       <Tab.Screen
-        name="Bạn Bè"
-        component={BanBe}
+        name="Thêm công việc"
+        component={AddScreen}
         options={{
-          tabBarIcon: ({color}) => <Profile2User color={color} size={20} />,
+          tabBarIcon: ({color}) => <AddSquare color={color} size={20} />,
+        }}
+      />
+      {/* <Tab.Screen
+        name="Chỉnh sửa"
+        component={EditTaskScreen}
+        options={{
+          tabBarIcon: ({color}) => <AddSquare color={color} size={20} />,
+        }}
+      /> */}
+      <Tab.Screen
+        name="DS hoàn thành"
+        component={ListFinishScreen}
+        options={{
+          tabBarIcon: ({color}) => <ArchiveTick color={color} size={20} />,
         }}
       />
       <Tab.Screen
-        name="Video"
-        component={Video}
+        name="DS chưa hoàn thành"
+        component={ListUnfinishScreen}
         options={{
-          tabBarIcon: ({color}) => <Video color={color} size={20} />,
+          tabBarIcon: ({color}) => <ArchiveSlash color={color} size={20} />,
         }}
       />
       <Tab.Screen
-        name="Nhắn Tin"
-        component={NhanTin}
+        name="Cài đặt"
+        component={SettingScreen}
         options={{
-          tabBarIcon: ({color}) => <Message color={color} size={20} />,
-        }}
-      />
-      <Tab.Screen
-        name="Thông Báo"
-        component={ThongBao}
-        options={{
-          tabBarIcon: ({color}) => <Notification color={color} size={20} />,
-        }}
-      />
-      <Tab.Screen
-        name="Menu"
-        component={Menu}
-        options={{
-          tabBarIcon: ({color}) => <HamburgerMenu color={color} size={20} />,
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={SignOut}
-        options={{
-          tabBarIcon: ({color}) => <LogoutCurve color={color} size={20} />,
+          tabBarIcon: ({color}) => <Setting2 color={color} size={20} />,
         }}
       />
     </Tab.Navigator>

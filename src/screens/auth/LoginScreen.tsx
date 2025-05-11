@@ -1,178 +1,128 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
-  ActivityIndicator,
+  StyleSheet,
+  Alert,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
-import {Formik} from 'formik';
-import * as Yup from 'yup';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { auth } from '../../firebase/firebaseConfig'; // Cập nhật đường dẫn nếu cần
+import { useNavigation } from '@react-navigation/native';
 
-const LoginScreen = ({navigation}: any) => {
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+const LoginScreen = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigation = useNavigation<any>();
 
-  const loginSchema = Yup.object().shape({
-    email: Yup.string().email('Email không hợp lệ').required('Email bắt buộc'),
-    password: Yup.string()
-      .min(6, 'Tối thiểu 6 ký tự')
-      .required('Mật khẩu bắt buộc'),
-  });
-
-  const handleLogin = async (values: {email: string; password: string}) => {
-    setIsLoading(true);
-    setErrorMessage('');
+  const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Lỗi', 'Vui lòng nhập đầy đủ email và mật khẩu.');
+      return;
+    }
 
     try {
-      await auth().signInWithEmailAndPassword(values.email, values.password);
+      await auth().signInWithEmailAndPassword(email, password);
+      // Đăng nhập thành công => chuyển hướng đến Home
+      navigation.replace('Home'); // hoặc navigation.navigate(...) tuỳ cách bạn cấu hình navigation
     } catch (error: any) {
-      if (error && error.code) {
-        switch (error.code) {
-          case 'auth/user-not-found':
-            setErrorMessage('Tài khoản không tồn tại.');
-            break;
-          case 'auth/wrong-password':
-            setErrorMessage('Mật khẩu không đúng.');
-            break;
-          case 'auth/invalid-email':
-            setErrorMessage('Email không hợp lệ.');
-            break;
-          case 'auth/user-disabled':
-            setErrorMessage('Tài khoản đã bị vô hiệu hóa.');
-            break;
-          case 'auth/too-many-requests':
-            setErrorMessage('Quá nhiều yêu cầu, vui lòng thử lại sau.');
-            break;
-          default:
-            setErrorMessage('Đăng nhập thất bại. Vui lòng thử lại.');
-            break;
-        }
-      } else {
-        setErrorMessage('Lỗi không xác định: ' + error.message);
+      let message = 'Đăng nhập thất bại. Vui lòng thử lại.';
+      if (error.code === 'auth/user-not-found') {
+        message = 'Không tìm thấy người dùng.';
+      } else if (error.code === 'auth/wrong-password') {
+        message = 'Sai mật khẩu.';
       }
-    } finally {
-      setIsLoading(false);
+      Alert.alert('Lỗi', message);
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Đăng nhập</Text>
-      <Formik
-        initialValues={{email: '', password: ''}}
-        validationSchema={loginSchema}
-        onSubmit={handleLogin}>
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-          setFieldValue,
-        }) => (
-          <>
-            {/* Email input */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder="Nhập email"
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                style={styles.input}
-              />
-              {values.email.length > 0 && (
-                <TouchableOpacity onPress={() => setFieldValue('email', '')}>
-                  <Icon name="close-circle" size={20} color="gray" />
-                </TouchableOpacity>
-              )}
-            </View>
-            {touched.email && errors.email && (
-              <Text style={styles.error}>{errors.email}</Text>
-            )}
 
-            {/* Password input */}
-            <View style={styles.inputContainer}>
-              <TextInput
-                placeholder="Nhập mật khẩu"
-                secureTextEntry={!showPassword}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
-                style={styles.input}
-              />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Icon
-                  name={showPassword ? 'eye-off' : 'eye'}
-                  size={20}
-                  color="gray"
-                />
-              </TouchableOpacity>
-              {values.password.length > 0 && (
-                <TouchableOpacity onPress={() => setFieldValue('password', '')}>
-                  <Icon name="close-circle" size={20} color="gray" />
-                </TouchableOpacity>
-              )}
-            </View>
-            {touched.password && errors.password && (
-              <Text style={styles.error}>{errors.password}</Text>
-            )}
+      <TextInput
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Mật khẩu"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        style={styles.input}
+      />
 
-            {errorMessage !== '' && (
-              <Text style={styles.error}>{errorMessage}</Text>
-            )}
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginButtonText}>Đăng nhập</Text>
+      </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => handleSubmit()}
-              disabled={isLoading}>
-              <Text style={styles.button}>
-                {isLoading ? (
-                  <ActivityIndicator size="small" color="#0000ff" />
-                ) : (
-                  'Đăng nhập'
-                )}
-              </Text>
-            </TouchableOpacity>
+      {/* Quên mật khẩu */}
+      <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordScreen')}>
+        <Text style={styles.forgotPasswordText}>Quên mật khẩu?</Text>
+      </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => navigation.navigate('SignupScreen')}>
-              <Text style={styles.link}>Chưa có tài khoản? Đăng ký</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ForgotPasswordScreen')}>
-              <Text style={styles.link}>Quên mật khẩu?</Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </Formik>
+      <View style={styles.registerLink}>
+        <Text>Bạn chưa có tài khoản?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('SignupScreen')}>
+          <Text style={styles.signupText}> Đăng ký ngay</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
+export default LoginScreen;
+
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 20, justifyContent: 'center'},
-  title: {fontSize: 24, fontWeight: 'bold', marginBottom: 20},
-  button: {marginTop: 20, fontSize: 18, color: 'blue', textAlign: 'center'},
-  link: {marginTop: 10, color: 'gray', textAlign: 'center'},
-  error: {color: 'red', marginTop: 4},
-  inputContainer: {
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    alignItems: 'center',
-    marginBottom: 12,
-    paddingHorizontal: 4,
+  container: {
+    flex: 1,
+    padding: 24,
+    justifyContent: 'center',
+    backgroundColor: '#f8f9fa',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 24,
+    textAlign: 'center',
   },
   input: {
-    flex: 1,
-    padding: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    marginBottom: 16,
+  },
+  loginButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  forgotPasswordText: {
+    color: '#007bff',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  registerLink: {
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  signupText: {
+    color: '#007bff',
+    fontWeight: 'bold',
   },
 });
-
-export default LoginScreen;
