@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { auth } from '../../firebase/firebaseConfig';
 
 const SettingScreen = () => {
   const handleLogout = () => {
@@ -8,8 +9,13 @@ const SettingScreen = () => {
       {
         text: 'Đăng xuất',
         style: 'destructive',
-        onPress: () => {
-          // Implement logout functionality here, e.g., calling auth.signOut()
+        onPress: async () => {
+          try {
+            await auth().signOut();
+          } catch (error) {
+            console.error('Lỗi khi đăng xuất:', error);
+            Alert.alert('Lỗi', 'Không thể đăng xuất. Vui lòng thử lại.');
+          }
         },
       },
     ]);
@@ -18,13 +24,16 @@ const SettingScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Cài đặt</Text>
-
+      <Text style={styles.header}>Nguyễn Trung Trực</Text>
+      <Text style={styles.header}>2124802010273</Text>
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Đăng xuất</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
+export default SettingScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +49,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   logoutButton: {
-    backgroundColor: '#dc3545',
+    backgroundColor: 'blue',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
@@ -51,5 +60,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-export default SettingScreen;

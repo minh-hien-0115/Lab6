@@ -10,7 +10,7 @@ interface ThemeContextProps {
 }
 
 interface ThemeProviderProps {
-  children: ReactNode;  // Here we add the type for the 'children' prop
+  children: ReactNode;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);

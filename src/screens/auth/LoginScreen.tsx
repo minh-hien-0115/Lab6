@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { auth } from '../../firebase/firebaseConfig'; // Cập nhật đường dẫn nếu cần
+import { auth } from '../../firebase/firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
@@ -23,8 +23,7 @@ const LoginScreen = () => {
 
     try {
       await auth().signInWithEmailAndPassword(email, password);
-      // Đăng nhập thành công => chuyển hướng đến Home
-      navigation.replace('Home'); // hoặc navigation.navigate(...) tuỳ cách bạn cấu hình navigation
+      navigation.replace('HomeScreen');
     } catch (error: any) {
       let message = 'Đăng nhập thất bại. Vui lòng thử lại.';
       if (error.code === 'auth/user-not-found') {

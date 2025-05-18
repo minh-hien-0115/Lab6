@@ -56,7 +56,7 @@ const AddScreen = ({ navigation }: any) => {
     if (field === 'description') setDescription('');
     setUndoVisible(true);
 
-    setTimeout(() => setUndoVisible(false), 10000);
+    setTimeout(() => setUndoVisible(false), 5000);
   };
 
   const handleUndo = () => {
@@ -118,7 +118,7 @@ const AddScreen = ({ navigation }: any) => {
       <TouchableOpacity style={styles.button} onPress={handleAddTask}>
         <View style={styles.buttonContent}>
           <Text style={styles.buttonText}>Thêm công việc </Text>
-          <Icon name="add-circle" size={20} color="#fff" style={{ marginRight: 8 }} />
+          {/* <Icon name="add-circle" size={20} color="#fff" style={{ marginRight: 8 }} /> */}
         </View>
       </TouchableOpacity>
 
